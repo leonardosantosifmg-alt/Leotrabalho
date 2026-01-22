@@ -1,3 +1,7 @@
+:root {
+    --verde-radar: #7ee787;
+    --alerta-amarelo: #e3b341;
+}
 body {
     font-family: 'Courier New', monospace;
     background-color: #0d1117;
