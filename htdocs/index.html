@@ -1,79 +1,186 @@
 <!DOCTYPE html>
-
 <html lang="pt-br">
-
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COMANDO DE OPERAÇÕES AÉREAS - TCP LAB</title>
+    <style>
+        :root {
+            --azul-aeronautica: #1a2a3a;
+            --azul-claro: #2c3e50;
+            --verde-radar: #00ff41;
+            --alerta-amarelo: #ffcc00;
+            --cinza-metal: #bdc3c7;
+            --falha-critica: #ff4444;
+        }
 
-    <title>TCP Transport Lab</title>
+        body {
+            background-color: #0b0f13;
+            color: var(--cinza-metal);
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            overflow-x: hidden;
+            /* Grid de fundo estilo radar */
+            background-image: radial-gradient(circle, #1a2a3a 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
 
-    <link rel="stylesheet" href="style.css">
+        /* Efeito de Scanline (linhas de TV antiga) */
+        body::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 10;
+            background-size: 100% 4px, 3px 100%;
+            pointer-events: none;
+        }
 
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 2px solid var(--azul-claro);
+            background: rgba(26, 42, 58, 0.9);
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            position: relative;
+            z-index: 3;
+        }
+
+        h1 {
+            color: var(--verde-radar);
+            text-transform: uppercase;
+            text-align: center;
+            border-bottom: 2px solid var(--verde-radar);
+            padding-bottom: 10px;
+            letter-spacing: 3px;
+            text-shadow: 0 0 8px var(--verde-radar);
+        }
+
+        p.subtitle {
+            text-align: center;
+            font-weight: bold;
+            color: var(--alerta-amarelo);
+            margin-bottom: 30px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: #0d161f;
+            border: 1px solid var(--azul-claro);
+            padding: 15px;
+            position: relative;
+            /* Corte nos cantos para visual futurista */
+            clip-path: polygon(0 0, 95% 0, 100% 5%, 100% 100%, 5% 100%, 0 95%);
+        }
+
+        .card::after {
+            content: "TOP SECRET";
+            font-size: 0.6rem;
+            color: rgba(255, 255, 255, 0.1);
+            position: absolute;
+            right: 10px;
+            bottom: 5px;
+        }
+
+        h3 {
+            color: var(--alerta-amarelo);
+            font-size: 1rem;
+            border-left: 4px solid var(--alerta-amarelo);
+            padding-left: 10px;
+            margin-top: 0;
+        }
+
+        button {
+            background: transparent;
+            color: var(--verde-radar);
+            border: 1px solid var(--verde-radar);
+            padding: 10px 20px;
+            cursor: pointer;
+            width: 100%;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            transition: all 0.3s;
+            text-transform: uppercase;
+        }
+
+        button:hover {
+            background: var(--verde-radar);
+            color: black;
+            box-shadow: 0 0 15px var(--verde-radar);
+        }
+
+        .status, .statusbox {
+            margin-top: 15px;
+            background: #05080a;
+            border: 1px inset var(--azul-claro);
+            min-height: 80px;
+            max-height: 200px;
+            padding: 10px;
+            font-size: 0.85rem;
+            color: var(--verde-radar);
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+        /* Rodapé com informações de "missão" */
+        .footer-decor {
+            margin-top: 20px;
+            font-size: 0.7rem;
+            display: flex;
+            justify-content: space-between;
+            color: var(--azul-claro);
+            border-top: 1px solid var(--azul-claro);
+            padding-top: 10px;
+        }
+
+        pre { margin: 0; padding: 0; }
+        img { max-width: 100%; border: 1px solid var(--verde-radar); margin-top: 10px; }
+    </style>
 </head>
-
 <body>
 
-    <div class="bg"></div>
-
-
-
     <div class="container">
-
-        <h1>Camada de Transporte</h1>
-
-        <p>Monitoramento de Transferência de Dados via Socket TCP</p>
-
-
+        <h1>Centro de Inteligência de Sinais</h1>
+        <p class="subtitle">SISTEMA DE MONITORAMENTO DE ENLACE TCP/IP - FAB v4.1</p>
 
         <div class="grid">
-
             <div class="card">
-
-                <h3>1. Handshake e Request Rápido</h3>
-
-                <p>Solicita um arquivo de texto pequeno (1KB).</p>
-
-                <button onclick="fetchData('pequeno.txt', 'log1')">Testar Ping/Texto</button>
-
-                <div id="log1" class="status"></div>
-
+                <h3>[ESTABELECIMENTO DE CONEXÃO]</h3>
+                <p>Solicitação de pacote tático (1KB). Verificação de Handshake e Latência.</p>
+                <button onclick="fetchData('pequeno.txt', 'log1')">Iniciar Transmissão</button>
+                <div id="log1" class="status">Aguardando comando...</div>
             </div>
 
-
-
             <div class="card">
-
-                <h3>2. Transferência de Mídia</h3>
-
-                <p>Solicita uma imagem (Jpeg).<br>Contém fragmentação.</p>
-
-                <button onclick="fetchData('medio.jpg', 'image-container')">Carregar Imagem</button>
-
-                <div id="image-container" class="statusbox"></div>
-
+                <h3>[RECONHECIMENTO DE IMAGEM]</h3>
+                <p>Download de setor via Jpeg. Reconstrução de datagramas fragmentados.</p>
+                <button onclick="fetchData('medio.jpg', 'image-container')">Capturar Satélite</button>
+                <div id="image-container" class="statusbox">Nenhum sinal detectado.</div>
             </div>
 
-
-
             <div class="card">
-
-                <h3>3. Fluxo Contínuo TCP</h3>
-
-                <p>Solicita um arquivo grande.<br>Contém janelas deslizantes.</p>
-
-                <button onclick="fetchData('grande.txt', 'log3')">Download Pesado</button>
-
-                <div id="log3" class="status"></div>
-
+                <h3>[FLUXO DE DADOS PESADO]</h3>
+                <p>Transferência de alta densidade. Monitoramento de Janelas Deslizantes.</p>
+                <button onclick="fetchData('grande.txt', 'log3')">Sincronizar Banco</button>
+                <div id="log3" class="status">Link em Standby.</div>
             </div>
-
         </div>
 
+        <div class="footer-decor">
+            <span>COORDENADAS: 15°47'S 47°56'W</span>
+            <span>STATUS DA REDE: CRIPTOGRAFIA ATIVA</span>
+            <span>SISTEMA OPERACIONAL: FAB-OS v4.1</span>
+        </div>
     </div>
 
     <script src="script.js"></script>
-
 </body>
-
 </html>
